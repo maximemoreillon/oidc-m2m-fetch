@@ -1,0 +1,15 @@
+{
+  "name": "oidc-m2m-fetch",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}
