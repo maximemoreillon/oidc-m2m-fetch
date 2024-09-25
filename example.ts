@@ -22,7 +22,8 @@ const client = new Client({
 })
 
 async function main() {
-  await client.fetch(TARGET_ENDPOINT_URL)
+  const response = await client.fetch(TARGET_ENDPOINT_URL)
+  console.log(response.ok)
 }
 
-setInterval(main, 10 * 60 * 1000)
+main()
