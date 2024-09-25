@@ -1,5 +1,5 @@
 {
-  "name": "oidc-m2m-fetch",
+  "name": "@moreillon/oidc-m2m-fetch",
   "version": "1.0.0",
   "description": "Fetching data securly using M2M OIDC authentication",
   "main": "dist/index.js",
