@@ -1,15 +1,21 @@
 {
   "name": "oidc-m2m-fetch",
-  "module": "index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.7",
-    "bun-types": "latest"
+  "version": "1.0.0",
+  "description": "Fetching data securly using M2M OIDC authentication",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
+  "author": "Maxime MOREILLON",
+  "license": "ISC",
   "dependencies": {
     "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
+    "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
   }
 }

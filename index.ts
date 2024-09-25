@@ -1,25 +1,85 @@
-import Client from "./client"
+import jwt from "jsonwebtoken"
 
-const {
-  OIDC_CLIENT_ID,
-  OIDC_CLIENT_SECRET,
-  OIDC_TOKEN_URL,
-  OIDC_AUDIENCE,
-  TARGET_ENDPOINT_URL = "http://localhost:8080",
-} = process.env
+type ContentType = "application/json" | "application/x-www-form-urlencoded"
 
-if (!OIDC_CLIENT_ID || !OIDC_CLIENT_SECRET || !OIDC_TOKEN_URL)
-  throw new Error("Misconfigured auth")
-
-const client = new Client({
-  client_id: OIDC_CLIENT_ID,
-  client_secret: OIDC_CLIENT_SECRET,
-  token_url: OIDC_TOKEN_URL,
-  audience: OIDC_AUDIENCE,
-})
-
-async function main() {
-  await client.fetch(TARGET_ENDPOINT_URL)
+type Options = {
+  token_url: string
+  conten_type?: ContentType
+  client_id: string
+  client_secret: string
+  audience?: string
+  grant_type?: string
 }
 
-setInterval(main, 10 * 60 * 1000)
+export default class {
+  access_token?: string
+
+  token_url: string
+  conten_type: ContentType
+
+  tokenFetchBody: {
+    client_id: string
+    client_secret: string
+    audience?: string
+    grant_type: string
+  }
+
+  constructor(options: Options) {
+    const {
+      token_url,
+      conten_type = "application/json",
+      grant_type = "client_credentials",
+      client_id,
+      client_secret,
+      audience,
+    } = options
+
+    this.token_url = token_url
+    this.conten_type = conten_type
+    this.tokenFetchBody = { client_id, client_secret, audience, grant_type }
+  }
+
+  async fetchToken() {
+    const init: RequestInit = {
+      method: "POST",
+      headers: {
+        "content-type": this.conten_type,
+      },
+    }
+
+    // Auth0 uses JSON, Keycloak uses x-www-form-urlencoded
+    if (this.conten_type === "application/json")
+      init.body = JSON.stringify(this.tokenFetchBody)
+    else {
+      init.body = Object.entries(this.tokenFetchBody)
+        .map((e) => e.join("="))
+        .join("&")
+    }
+
+    const response = await fetch(this.token_url, init)
+
+    const { access_token } = (await response.json()) as any
+
+    this.access_token = access_token
+  }
+
+  async fetch(input: string | URL, init: RequestInit = {}) {
+    if (!this.access_token) await this.fetchToken()
+    if (!this.access_token) throw new Error("Access token not available")
+
+    const { exp }: any = jwt.decode(this.access_token)
+    const now = new Date().getTime() / 1000
+
+    if (now > exp) {
+      await this.fetchToken()
+      if (!this.access_token) throw new Error("Access token not available")
+    }
+
+    init.headers = {
+      ...init.headers,
+      authorization: `Bearer ${this.access_token}`,
+    }
+
+    return await fetch(input, init)
+  }
+}
