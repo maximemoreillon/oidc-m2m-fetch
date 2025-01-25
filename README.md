@@ -1,6 +1,6 @@
 # OIDC M2M fetch
 
-A simple service to fetch M2M tokens and provide them to trusted applications.
+A simple package to fetch OIDC M2M tokens.
 
 ## Environment variables
 
