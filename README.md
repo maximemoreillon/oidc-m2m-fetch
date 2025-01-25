@@ -1,15 +1,10 @@
-# oidc-m2m-fetch
+# OIDC M2M fetch
 
-To install dependencies:
+A simple service to fetch M2M tokens and provide them to trusted applications.
 
-```bash
-bun install
-```
+## Environment variables
 
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.0.1. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+- OIDC_CLIENT_ID
+- OIDC_CLIENT_SECRET
+- OIDC_TOKEN_URL
+- OIDC_AUDIENCE
