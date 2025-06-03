@@ -4,10 +4,8 @@ stages:
 publish:
   image: node:20
   stage: publish
-  # only:
-  #   - tags
-  # tags:
-  #   - moreillon
+  only:
+    - tags
   script:
     # Install dependencies and build app
     - npm install
